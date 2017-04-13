@@ -1,0 +1,146 @@
+<!--
+性能统计趋势图
+cpu 趋势
+mem 趋势
+-->
+<html>
+<head>
+</head>
+<body>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<div style="padding:20px">
+    <h3>性能统计:</h3>
+    <hr>
+    <div id="cpu"></div>
+    <div id="meminfo"></div>
+    {% if  package_name %}
+    <div id="pcpu"></div>
+    <div id="pmem"></div>
+    {% endif %}
+</div>
+
+<script>
+Highcharts.chart('cpu', {
+    title: {
+        text: 'CPU使用率'
+    },
+    chart: {
+            zoomType: 'x',
+            type: "spline"
+     },
+     "xAxis": {
+                "crosshair": true,
+                "type": "datetime",
+                "labels": {
+                    "format": "{value:%Y-%m-%d %H:%M:%S}"
+                }
+     },
+     "yAxis":
+    {
+        "labels": {
+            "format": "{value} %"
+        }
+    },
+    plotOptions: {
+        spline: {
+            turboThreshold: 0
+        }
+    },
+    series: [{
+        name: 'CPU使用率',
+        data: {{ cpuinfo }}
+    }]
+});
+
+Highcharts.chart('meminfo', {
+    title: {
+        text: '内存剩余'
+    },
+    chart: {
+        zoomType: 'x',
+        type: "spline"
+    },
+    "xAxis": {
+                "crosshair": true,
+                "type": "datetime",
+                "labels": {
+                    "format": "{value:%Y-%m-%d %H:%M:%S}"
+                }
+     },
+     plotOptions: {
+        spline: {
+            turboThreshold: 0
+        }
+    },
+    series: [{
+        name: '内存剩余',
+        data: {{ meminfo }}
+    }]
+});
+
+{% if  package_name %}
+Highcharts.chart('pcpu', {
+    title: {
+        text: 'CPU(package: {{ package_name }} )使用率'
+    },
+    chart: {
+            zoomType: 'x',
+            type: "spline"
+     },
+     "xAxis": {
+                "crosshair": true,
+                "type": "datetime",
+                "labels": {
+                    "format": "{value:%Y-%m-%d %H:%M:%S}"
+                }
+     },
+     "yAxis":
+    {
+        "labels": {
+            "format": "{value} %"
+        }
+    },
+    plotOptions: {
+        spline: {
+            turboThreshold: 0
+        }
+    },
+    series: [{
+        name: 'CPU使用率',
+        data: {{ pcpu }}
+    }]
+});
+Highcharts.chart('pmem', {
+    title: {
+        text: 'MEM(package: {{ package_name }} )dumpsys meminfo total'
+    },
+    chart: {
+            zoomType: 'x',
+            type: "spline"
+     },
+     "xAxis": {
+                "crosshair": true,
+                "type": "datetime",
+                "labels": {
+                    "format": "{value:%Y-%m-%d %H:%M:%S}"
+                }
+     },
+    plotOptions: {
+        spline: {
+            turboThreshold: 0
+        }
+    },
+    series: [{
+        name: 'Mem heap total',
+        data: {{ pmem }}
+    }]
+});
+{% endif %}
+
+</script>
+
+</body>
+</html>
+
+
